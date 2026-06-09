@@ -1,16 +1,7 @@
 package com.example.lifecalc.presentation.navigation
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-sealed class Screen {
-
-    @Serializable
-    data object Input : Screen()
-
-    @Serializable
-    data object Result : Screen()
-
-    @Serializable
-    data object History : Screen()
+sealed class Screen(val route: String) {
+    object Input   : Screen("input")
+    object Result  : Screen("result")
+    object History : Screen("history")
 }
