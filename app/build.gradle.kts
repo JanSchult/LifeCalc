@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace  = "com.lifecost.app"
+    namespace  = "com.example.lifecalc"
     compileSdk = 36
 
     defaultConfig {

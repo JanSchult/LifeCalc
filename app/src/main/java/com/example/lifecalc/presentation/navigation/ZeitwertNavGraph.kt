@@ -15,23 +15,23 @@ import com.example.lifecalc.presentation.screens.results.ResultScreen
 fun ZeitwertNavGraph(modifier: Modifier) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Input.route) {
+    NavHost(navController = navController, startDestination = Screen.Input) {
 
-        composable(Screen.Input.route) {
+        composable<Screen.Input> {
             InputScreen(
-                onNavigateToResult = { navController.navigate(Screen.Result.route) },
-                onNavigateToHistory = { navController.navigate(Screen.History.route) }
+                onNavigateToResult  = { navController.navigate(Screen.Result) },
+                onNavigateToHistory = { navController.navigate(Screen.History) }
             )
         }
 
-        composable(Screen.Result.route) {
+        composable<Screen.Result> {
             ResultScreen(
-                onBack = { navController.popBackStack() },
-                onHistory = { navController.navigate(Screen.History.route) }
+                onBack    = { navController.popBackStack() },
+                onHistory = { navController.navigate(Screen.History) }
             )
         }
 
-        composable(Screen.History.route) {
+        composable<Screen.History> {
             HistoryScreen(
                 onBack = { navController.popBackStack() }
             )
