@@ -12,21 +12,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class InputUiState(
-    val incomeInput: String = "",
-    val isMonthly: Boolean = true,
-    val hoursPerWeek: String = "40",
-    val taxPercent: String = "30",
-    val targetAmount: String = "",
-    val targetLabel: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null,
-    val result: CalculationResult? = null
-)
+
 
 class InputViewModel(
     private val calculateUseCase: CalculateLifetimeUseCase,
-    private val billingManager: BillingManager
+    billingManager: BillingManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InputUiState())
@@ -41,7 +31,7 @@ class InputViewModel(
     fun onTargetAmountChange(value: String) = _uiState.update { it.copy(targetAmount = value) }
     fun onTargetLabelChange(value: String) = _uiState.update { it.copy(targetLabel = value) }
 
-    fun calculate() {
+    fun calculate(sharedViewModel: SharedViewModel) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
@@ -63,10 +53,19 @@ class InputViewModel(
                     )
 
                 val result = calculateUseCase(profile, target, _uiState.value.targetLabel)
-                _uiState.update { it.copy(result = result, isLoading = false) }
+
+                // ← NEU: Ergebnis in SharedViewModel schreiben
+                sharedViewModel.setResult(result)
+
+                // ← GEÄNDERT: navigateToResult statt result im UiState
+                _uiState.update { it.copy(isLoading = false, navigateToResult = true) }
+
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message, isLoading = false) }
             }
         }
+    }
+    fun resetNavigation() {
+        _uiState.update { it.copy(navigateToResult = false) }
     }
 }

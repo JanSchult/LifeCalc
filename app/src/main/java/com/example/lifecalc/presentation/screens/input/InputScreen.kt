@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lifecalc.Viewmodel.InputViewModel
+import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.presentation.screens.composables.SectionLabel
 import com.example.lifecalc.presentation.screens.composables.ZeitwertTextField
 import com.example.lifecalc.ui.theme.Background
@@ -44,14 +45,18 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun InputScreen(
+    sharedViewModel: SharedViewModel,
     onNavigateToResult: () -> Unit,
     onNavigateToHistory: () -> Unit,
     viewModel: InputViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(state.result) {
-        if (state.result != null) onNavigateToResult()
+    LaunchedEffect(state.navigateToResult) {
+        if (state.navigateToResult) {
+            viewModel.resetNavigation()
+            onNavigateToResult()
+        }
     }
 
     Column(
@@ -153,7 +158,7 @@ fun InputScreen(
 
         // CTA-Button
         Button(
-            onClick = viewModel::calculate,
+            onClick = { viewModel.calculate(sharedViewModel) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),

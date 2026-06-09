@@ -5,20 +5,24 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.presentation.screens.history.HistoryScreen
 import com.example.lifecalc.presentation.screens.input.InputScreen
 import com.example.lifecalc.presentation.screens.results.ResultScreen
-
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun ZeitwertNavGraph(modifier: Modifier) {
     val navController = rememberNavController()
 
+    val sharedViewModel: SharedViewModel = koinViewModel()
+
     NavHost(navController = navController, startDestination = Screen.Input.route) {
 
         composable(Screen.Input.route) {
             InputScreen(
+                sharedViewModel= sharedViewModel,
                 onNavigateToResult = { navController.navigate(Screen.Result.route) },
                 onNavigateToHistory = { navController.navigate(Screen.History.route) }
             )
@@ -26,6 +30,7 @@ fun ZeitwertNavGraph(modifier: Modifier) {
 
         composable(Screen.Result.route) {
             ResultScreen(
+                sharedViewModel = sharedViewModel,
                 onBack = { navController.popBackStack() },
                 onHistory = { navController.navigate(Screen.History.route) }
             )

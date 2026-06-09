@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lifecalc.Viewmodel.ResultViewModel
+import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.presentation.screens.composables.LifetimeBar
 import com.example.lifecalc.presentation.screens.composables.MetricCard
 import com.example.lifecalc.ui.theme.Background
@@ -44,11 +45,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ResultScreen(
+    sharedViewModel: SharedViewModel,
     onBack: () -> Unit,
     onHistory: () -> Unit,
     viewModel: ResultViewModel = koinViewModel()
 ) {
-    val result by viewModel.result.collectAsState()
+    val result by sharedViewModel.result.collectAsState()
     val isSaved by viewModel.isSaved.collectAsState()
 
     result?.let { r ->

@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.example.lifecalc.Viewmodel.HistoryViewModel
 import com.example.lifecalc.Viewmodel.InputViewModel
 import com.example.lifecalc.Viewmodel.ResultViewModel
+import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.data.db.AppDatabase
 import com.example.lifecalc.data.repository.CalculationRepository
@@ -37,7 +38,9 @@ val appModule = module {
     // ViewModels
     viewModelOf(::InputViewModel)
 
-   viewModelOf(::ResultViewModel)
+    viewModelOf(::ResultViewModel)
 
     viewModelOf(::HistoryViewModel)
+
+    viewModelOf(::SharedViewModel)
 }
