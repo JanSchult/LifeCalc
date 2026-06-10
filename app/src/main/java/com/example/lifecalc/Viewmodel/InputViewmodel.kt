@@ -3,6 +3,7 @@ package com.example.lifecalc.Viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lifecalc.billing.BillingManager
+import com.example.lifecalc.data.preference.UserPreferences
 import com.example.lifecalc.domain.model.CalculationResult
 import com.example.lifecalc.domain.model.UserProfile
 import com.example.lifecalc.domain.usecase.CalculateLifetimeUseCase
@@ -16,7 +17,9 @@ import kotlinx.coroutines.launch
 
 class InputViewModel(
     private val calculateUseCase: CalculateLifetimeUseCase,
-    billingManager: BillingManager
+    billingManager: BillingManager,
+    private val userPreferences: UserPreferences   // ← neu
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InputUiState())
@@ -24,12 +27,58 @@ class InputViewModel(
 
     val premiumStatus = billingManager.premiumStatus
 
-    fun onIncomeChange(value: String) = _uiState.update { it.copy(incomeInput = value) }
-    fun onToggleIncomeType() = _uiState.update { it.copy(isMonthly = !it.isMonthly) }
-    fun onHoursChange(value: String) = _uiState.update { it.copy(hoursPerWeek = value) }
-    fun onTaxChange(value: String) = _uiState.update { it.copy(taxPercent = value) }
-    fun onTargetAmountChange(value: String) = _uiState.update { it.copy(targetAmount = value) }
-    fun onTargetLabelChange(value: String) = _uiState.update { it.copy(targetLabel = value) }
+    init {
+        // Gespeicherte Werte beim Start laden
+        viewModelScope.launch {
+            userPreferences.incomeFlow.collect { value ->
+                _uiState.update { it.copy(incomeInput = value) }
+            }
+        }
+        viewModelScope.launch {
+            userPreferences.isMonthlyFlow.collect { value ->
+                _uiState.update { it.copy(isMonthly = value) }
+            }
+        }
+        viewModelScope.launch {
+            userPreferences.hoursPerWeekFlow.collect { value ->
+                _uiState.update { it.copy(hoursPerWeek = value) }
+            }
+        }
+        viewModelScope.launch {
+            userPreferences.taxPercentFlow.collect { value ->
+                _uiState.update { it.copy(taxPercent = value) }
+            }
+        }
+    }
+
+    // Jede onChange-Funktion speichert sofort
+    fun onIncomeChange(value: String) {
+        _uiState.update { it.copy(incomeInput = value) }
+        viewModelScope.launch { userPreferences.saveIncome(value) }
+    }
+
+    fun onToggleIncomeType() {
+        val newValue = !_uiState.value.isMonthly
+        _uiState.update { it.copy(isMonthly = newValue) }
+        viewModelScope.launch { userPreferences.saveIsMonthly(newValue) }
+    }
+
+    fun onHoursChange(value: String) {
+        _uiState.update { it.copy(hoursPerWeek = value) }
+        viewModelScope.launch { userPreferences.saveHoursPerWeek(value) }
+    }
+
+    fun onTaxChange(value: String) {
+        _uiState.update { it.copy(taxPercent = value) }
+        viewModelScope.launch { userPreferences.saveTaxPercent(value) }
+    }
+    fun onTargetLabelChange(value: String) {
+        _uiState.update { it.copy(targetLabel = value) }
+    }
+
+    fun onTargetAmountChange(value: String) {
+        _uiState.update { it.copy(targetAmount = value) }
+    }
 
     fun calculate(sharedViewModel: SharedViewModel) {
         viewModelScope.launch {

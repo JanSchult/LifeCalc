@@ -10,6 +10,7 @@ import com.example.lifecalc.Viewmodel.ResultViewModel
 import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.data.db.AppDatabase
+import com.example.lifecalc.data.preference.UserPreferences
 import com.example.lifecalc.data.repository.CalculationRepository
 import com.example.lifecalc.domain.usecase.CalculateLifetimeUseCase
 import org.koin.core.module.dsl.viewModelOf
@@ -25,6 +26,9 @@ val appModule = module {
         ).build()
     }
     single { get<AppDatabase>().calculationDao() }
+
+    single { UserPreferences(androidContext()) }
+
 
     // Repositories
     single { CalculationRepository(get()) }
