@@ -48,6 +48,7 @@ fun InputScreen(
     sharedViewModel: SharedViewModel,
     onNavigateToResult: () -> Unit,
     onNavigateToHistory: () -> Unit,
+    onNavigateToBudget: () -> Unit,
     viewModel: InputViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -183,6 +184,12 @@ fun InputScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Frühere Berechnungen", color = OnSurface, fontSize = 13.sp)
+        }
+        TextButton(
+            onClick = onNavigateToBudget,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("💰  Budget-Übersicht", color = OnSurface, fontSize = 13.sp)
         }
     }
 }

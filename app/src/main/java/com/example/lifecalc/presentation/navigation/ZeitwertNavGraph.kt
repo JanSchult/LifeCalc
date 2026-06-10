@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.lifecalc.Viewmodel.SharedViewModel
+import com.example.lifecalc.presentation.screens.BugetScreen.BudgetScreen
 import com.example.lifecalc.presentation.screens.history.HistoryScreen
 import com.example.lifecalc.presentation.screens.input.InputScreen
 import com.example.lifecalc.presentation.screens.results.ResultScreen
@@ -24,7 +25,8 @@ fun ZeitwertNavGraph(modifier: Modifier) {
             InputScreen(
                 sharedViewModel= sharedViewModel,
                 onNavigateToResult = { navController.navigate(Screen.Result.route) },
-                onNavigateToHistory = { navController.navigate(Screen.History.route) }
+                onNavigateToHistory = { navController.navigate(Screen.History.route) },
+                onNavigateToBudget = { navController.navigate(Screen.Budget.route) }
             )
         }
 
@@ -38,6 +40,11 @@ fun ZeitwertNavGraph(modifier: Modifier) {
 
         composable(Screen.History.route) {
             HistoryScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.Budget.route) {
+            BudgetScreen(
                 onBack = { navController.popBackStack() }
             )
         }
