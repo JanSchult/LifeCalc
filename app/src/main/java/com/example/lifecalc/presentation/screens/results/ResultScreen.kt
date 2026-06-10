@@ -134,7 +134,7 @@ fun ResultScreen(
 
             // Speichern-Button
             OutlinedButton(
-                onClick = { viewModel.save() },
+                onClick = { viewModel.save(sharedViewModel) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isSaved,
                 border = BorderStroke(1.dp, if (isSaved) PrimaryDim else Primary)

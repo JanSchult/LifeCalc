@@ -23,54 +23,26 @@ import kotlinx.coroutines.launch
  * SavedStateHandle ist robuster gegen Process-Death).
  */
 class ResultViewModel(
-    savedStateHandle: SavedStateHandle,
     private val repository: CalculationRepository,
     private val billingManager: BillingManager
 ) : ViewModel() {
 
-    // ── State ─────────────────────────────────────────────────────────────
-
-    /**
-     * Das Ergebnis kommt über den SavedStateHandle aus dem InputViewModel.
-     * Key muss mit dem Key im NavGraph übereinstimmen ("result").
-     */
-    private val _result = MutableStateFlow<CalculationResult?>(
-        savedStateHandle["result"]
-    )
-    val result: StateFlow<CalculationResult?> = _result.asStateFlow()
-
-    /** Ob der aktuelle Eintrag bereits in der DB gespeichert wurde. */
     private val _isSaved = MutableStateFlow(false)
     val isSaved: StateFlow<Boolean> = _isSaved.asStateFlow()
 
-    /** Ob das Speichern gerade läuft (verhindert Doppelklick). */
     private val _isSaving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
 
-    /** Fehlermeldung beim Speichern (z.B. DB-Fehler). */
     private val _saveError = MutableStateFlow<String?>(null)
     val saveError: StateFlow<String?> = _saveError.asStateFlow()
 
-    /** Premium-Status für eventuelle UI-Gating-Logik im Result-Screen. */
     val premiumStatus: StateFlow<PremiumStatus> = billingManager.premiumStatus
 
-    // ── Free-Tier-Grenze ─────────────────────────────────────────────────
-
-    /**
-     * Im Free-Tier darf der Nutzer max. 3 Einträge speichern.
-     * Bei Überschreitung: Paywall zeigen statt speichern.
-     */
     private val FREE_SAVE_LIMIT = 3
 
-    // ── Öffentliche Aktionen ──────────────────────────────────────────────
-
-    /**
-     * Speichert das aktuelle Ergebnis in der Room-Datenbank.
-     * Respektiert das Free-Tier-Limit: bei 3 Einträgen wird stattdessen
-     * [SaveResult.LimitReached] emittiert, damit der Screen die Paywall zeigen kann.
-     */
-    fun save() {
-        val current = _result.value ?: return
+    // Ergebnis kommt jetzt direkt vom SharedViewModel rein
+    fun save(sharedViewModel: SharedViewModel) {
+        val current = sharedViewModel.result.value ?: return
         if (_isSaved.value || _isSaving.value) return
 
         viewModelScope.launch {
@@ -83,8 +55,6 @@ class ResultViewModel(
                 if (!isPremium) {
                     val count = repository.getCount()
                     if (count >= FREE_SAVE_LIMIT) {
-                        // Paywall-Signal: isSaved bleibt false, saveError trägt
-                        // einen speziellen Marker damit der Screen die Paywall öffnet.
                         _saveError.value = PAYWALL_TRIGGER
                         return@launch
                     }
@@ -101,16 +71,17 @@ class ResultViewModel(
         }
     }
 
-    /** Fehler-State zurücksetzen (z.B. nach Snackbar-Dismiss). */
     fun clearError() {
         _saveError.value = null
     }
 
+    // isSaved zurücksetzen wenn neues Ergebnis kommt
+    fun resetSavedState() {
+        _isSaved.value = false
+        _saveError.value = null
+    }
+
     companion object {
-        /**
-         * Wenn saveError diesen Wert enthält, soll der Screen
-         * die Upgrade-Paywall öffnen statt eine Fehlermeldung zu zeigen.
-         */
         const val PAYWALL_TRIGGER = "PAYWALL"
     }
 }
