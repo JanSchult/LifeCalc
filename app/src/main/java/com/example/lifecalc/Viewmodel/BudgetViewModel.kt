@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-private const val FREE_EXPENSE_LIMIT = 5
+private const val FREE_EXPENSE_LIMIT = 3
 
 class BudgetViewModel(
     private val expenseRepository: ExpenseRepository,

@@ -38,7 +38,7 @@ class ResultViewModel(
 
     val premiumStatus: StateFlow<PremiumStatus> = billingManager.premiumStatus
 
-    private val FREE_SAVE_LIMIT = 3
+    private val FREE_SAVE_LIMIT = 2
 
     // Ergebnis kommt jetzt direkt vom SharedViewModel rein
     fun save(sharedViewModel: SharedViewModel) {
