@@ -1,4 +1,4 @@
-package com.example.lifecalc.Viewmodel
+package com.example.lifecalc.Viewmodel.UiState
 
 import com.example.lifecalc.domain.model.Expense
 import com.example.lifecalc.domain.model.ExpenseCategory

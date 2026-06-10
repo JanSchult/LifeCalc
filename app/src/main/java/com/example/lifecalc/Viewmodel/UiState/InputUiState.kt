@@ -1,6 +1,4 @@
-package com.example.lifecalc.Viewmodel
-
-import com.example.lifecalc.domain.model.CalculationResult
+package com.example.lifecalc.Viewmodel.UiState
 
 data class InputUiState(
     val incomeInput: String = "",

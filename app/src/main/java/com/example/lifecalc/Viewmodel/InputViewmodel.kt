@@ -2,6 +2,7 @@ package com.example.lifecalc.Viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lifecalc.Viewmodel.UiState.InputUiState
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.data.preference.UserPreferences
 import com.example.lifecalc.domain.model.CalculationResult

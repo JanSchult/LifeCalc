@@ -18,6 +18,10 @@ class UserPreferences(private val context: Context) {
         val KEY_HOURS_PER_WEEK = stringPreferencesKey("hours_per_week")
         val KEY_TAX_PERCENT   = stringPreferencesKey("tax_percent")
     }
+    val KEY_ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
+
+    val onboardingDoneFlow: Flow<Boolean> = context.dataStore.data
+        .map { it[KEY_ONBOARDING_DONE] ?: false }
 
     val incomeFlow: Flow<String> = context.dataStore.data
         .map { it[KEY_INCOME] ?: "" }
@@ -33,6 +37,9 @@ class UserPreferences(private val context: Context) {
 
     suspend fun saveIncome(value: String) {
         context.dataStore.edit { it[KEY_INCOME] = value }
+    }
+    suspend fun setOnboardingDone() {
+        context.dataStore.edit { it[KEY_ONBOARDING_DONE] = true }
     }
 
     suspend fun saveIsMonthly(value: Boolean) {

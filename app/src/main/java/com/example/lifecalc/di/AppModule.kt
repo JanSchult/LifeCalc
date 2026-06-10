@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.example.lifecalc.Viewmodel.BudgetViewModel
 import com.example.lifecalc.Viewmodel.HistoryViewModel
 import com.example.lifecalc.Viewmodel.InputViewModel
+import com.example.lifecalc.Viewmodel.OnboardingViewModel
 import com.example.lifecalc.Viewmodel.ResultViewModel
 import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.billing.BillingManager
@@ -56,6 +57,10 @@ val appModule = module {
     factory { CalculateLifetimeUseCase() }
 
     // ViewModels
+
+    viewModelOf(::OnboardingViewModel)
+
+
     viewModelOf(::InputViewModel)
 
     viewModelOf(::ResultViewModel)
