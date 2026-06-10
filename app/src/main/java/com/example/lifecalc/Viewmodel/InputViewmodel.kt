@@ -53,9 +53,10 @@ class InputViewModel(
 
     // Jede onChange-Funktion speichert sofort
     fun onIncomeChange(value: String) {
-        _uiState.update { it.copy(incomeInput = value) }
+        _uiState.update { it.copy(incomeInput = value, incomeError = null) }
         viewModelScope.launch { userPreferences.saveIncome(value) }
     }
+
 
     fun onToggleIncomeType() {
         val newValue = !_uiState.value.isMonthly
@@ -64,12 +65,12 @@ class InputViewModel(
     }
 
     fun onHoursChange(value: String) {
-        _uiState.update { it.copy(hoursPerWeek = value) }
+        _uiState.update { it.copy(hoursPerWeek = value, hoursError = null) }
         viewModelScope.launch { userPreferences.saveHoursPerWeek(value) }
     }
 
     fun onTaxChange(value: String) {
-        _uiState.update { it.copy(taxPercent = value) }
+        _uiState.update { it.copy(taxPercent = value, taxError = null) }
         viewModelScope.launch { userPreferences.saveTaxPercent(value) }
     }
     fun onTargetLabelChange(value: String) {
@@ -77,20 +78,20 @@ class InputViewModel(
     }
 
     fun onTargetAmountChange(value: String) {
-        _uiState.update { it.copy(targetAmount = value) }
+        _uiState.update { it.copy(targetAmount = value, targetAmountError = null) }
     }
 
     fun calculate(sharedViewModel: SharedViewModel) {
+        // Erst validieren — wenn Fehler da sind, nicht weiterrechnen
+        if (!validate()) return
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
-                val income = _uiState.value.incomeInput.toDoubleOrNull()
-                    ?: throw IllegalArgumentException("Ungültiges Einkommen")
-                val hours = _uiState.value.hoursPerWeek.toDoubleOrNull()
-                    ?: throw IllegalArgumentException("Ungültige Stundenzahl")
-                val tax = _uiState.value.taxPercent.toDoubleOrNull() ?: 0.0
-                val target = _uiState.value.targetAmount.toDoubleOrNull()
-                    ?: throw IllegalArgumentException("Ungültiger Betrag")
+                val income = _uiState.value.incomeInput.toDouble()
+                val hours  = _uiState.value.hoursPerWeek.toDouble()
+                val tax    = _uiState.value.taxPercent.toDoubleOrNull() ?: 0.0
+                val target = _uiState.value.targetAmount.toDouble()
 
                 val profile = if (_uiState.value.isMonthly)
                     UserProfile.fromMonthlyGross(income, hours, tax)
@@ -102,17 +103,84 @@ class InputViewModel(
                     )
 
                 val result = calculateUseCase(profile, target, _uiState.value.targetLabel)
-
-                // ← NEU: Ergebnis in SharedViewModel schreiben
                 sharedViewModel.setResult(result)
-
-                // ← GEÄNDERT: navigateToResult statt result im UiState
                 _uiState.update { it.copy(isLoading = false, navigateToResult = true) }
 
             } catch (e: Exception) {
-                _uiState.update { it.copy(error = e.message, isLoading = false) }
+                _uiState.update { it.copy(error = "Berechnung fehlgeschlagen.", isLoading = false) }
             }
         }
+    }
+
+    /**
+     * Validiert alle Felder und schreibt Fehler direkt in den UiState.
+     * Gibt true zurück wenn alles valid ist.
+     */
+    private fun validate(): Boolean {
+        val state = _uiState.value
+
+        // ── Einkommen ─────────────────────────────────────────
+        val incomeError = when {
+            state.incomeInput.isBlank() ->
+                "Bitte Einkommen eingeben"
+            state.incomeInput.toDoubleOrNull() == null ->
+                "Nur Zahlen erlaubt"
+            state.incomeInput.toDouble() <= 0 ->
+                "Einkommen muss größer als 0 sein"
+            else -> null
+        }
+
+        // ── Stunden ───────────────────────────────────────────
+        val hoursError = when {
+            state.hoursPerWeek.isBlank() ->
+                "Bitte Stunden eingeben"
+            state.hoursPerWeek.toDoubleOrNull() == null ->
+                "Nur Zahlen erlaubt"
+            state.hoursPerWeek.toDouble() <= 0 ->
+                "Stunden müssen größer als 0 sein"
+            state.hoursPerWeek.toDouble() > 168 ->
+                "Maximal 168 Stunden/Woche möglich"
+            else -> null
+        }
+
+        // ── Steuer ────────────────────────────────────────────
+        val taxError = when {
+            state.taxPercent.isNotBlank() &&
+                    state.taxPercent.toDoubleOrNull() == null ->
+                "Nur Zahlen erlaubt"
+            state.taxPercent.isNotBlank() &&
+                    state.taxPercent.toDouble() < 0 ->
+                "Abzüge können nicht negativ sein"
+            state.taxPercent.isNotBlank() &&
+                    state.taxPercent.toDouble() >= 100 ->
+                "Abzüge müssen unter 100% liegen"
+            else -> null
+        }
+
+        // ── Zielbetrag ────────────────────────────────────────
+        val targetAmountError = when {
+            state.targetAmount.isBlank() ->
+                "Bitte Betrag eingeben"
+            state.targetAmount.toDoubleOrNull() == null ->
+                "Nur Zahlen erlaubt"
+            state.targetAmount.toDouble() < 0 ->
+                "Betrag kann nicht negativ sein"
+            state.targetAmount.toDouble() == 0.0 ->
+                "Betrag muss größer als 0 sein"
+            else -> null
+        }
+
+        _uiState.update {
+            it.copy(
+                incomeError       = incomeError,
+                hoursError        = hoursError,
+                taxError          = taxError,
+                targetAmountError = targetAmountError,
+                error             = null
+            )
+        }
+
+        return !_uiState.value.hasFieldErrors
     }
     fun resetNavigation() {
         _uiState.update { it.copy(navigateToResult = false) }

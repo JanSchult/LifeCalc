@@ -10,7 +10,20 @@ data class InputUiState(
     val targetAmount: String = "",
     val targetLabel: String = "",
     val isLoading: Boolean = false,
+    val navigateToResult: Boolean = false,
+
+    // Globaler Fehler (Logikfehler die kein Feld betreffen)
     val error: String? = null,
-    val result: CalculationResult? = null,
-    val navigateToResult: Boolean = false
-)
+
+    // Fehler pro Feld
+    val incomeError: String? = null,
+    val hoursError: String? = null,
+    val taxError: String? = null,
+    val targetAmountError: String? = null
+) {
+    val hasFieldErrors: Boolean
+        get() = incomeError != null ||
+                hoursError != null ||
+                taxError != null ||
+                targetAmountError != null
+}

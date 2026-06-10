@@ -100,7 +100,9 @@ fun InputScreen(
                 value = state.incomeInput,
                 onValueChange = viewModel::onIncomeChange,
                 label = if (state.isMonthly) "Bruttogehalt (€)" else "Bruttostundenlohn (€)",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isError = state.incomeError != null,
+                errorMessage = state.incomeError
             )
             FilterChip(
                 selected = state.isMonthly,
@@ -121,13 +123,17 @@ fun InputScreen(
                 value = state.hoursPerWeek,
                 onValueChange = viewModel::onHoursChange,
                 label = "Stunden/Woche",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isError = state.hoursError != null,
+                errorMessage = state.hoursError
             )
             ZeitwertTextField(
                 value = state.taxPercent,
                 onValueChange = viewModel::onTaxChange,
                 label = "Abzüge (%)",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isError = state.taxError != null,
+                errorMessage = state.taxError
             )
         }
 
@@ -145,7 +151,10 @@ fun InputScreen(
         ZeitwertTextField(
             value = state.targetAmount,
             onValueChange = viewModel::onTargetAmountChange,
-            label = "Betrag in €"
+            label = "Betrag in €",
+            modifier = Modifier.fillMaxWidth(),
+            isError = state.targetAmountError != null,
+            errorMessage = state.targetAmountError
         )
 
         // Fehlerhinweis
