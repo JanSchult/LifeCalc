@@ -60,7 +60,6 @@ val appModule = module {
 
     viewModelOf(::OnboardingViewModel)
 
-
     viewModelOf(::InputViewModel)
 
     viewModelOf(::ResultViewModel)
