@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "105878174031",
+    "project_id": "lifecalc-42fff",
+    "storage_bucket": "lifecalc-42fff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105878174031:android:4607abee97bfb00bd96d3a",
+        "android_client_info": {
+          "package_name": "com.lifecost.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDURn7PJz0dzmYwwvtC6JWEB5PwT_nHdII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
