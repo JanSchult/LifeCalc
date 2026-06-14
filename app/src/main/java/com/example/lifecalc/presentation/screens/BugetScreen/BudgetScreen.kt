@@ -1,5 +1,7 @@
 package com.example.lifecalc.presentation.screens.BugetScreen
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,10 +24,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lifecalc.Viewmodel.BudgetViewModel
+import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.presentation.screens.composables.BudgetSummaryCard
 import com.example.lifecalc.presentation.screens.composables.ExpenseDialog
 import com.example.lifecalc.presentation.screens.composables.ExpenseItem
@@ -36,15 +40,18 @@ import com.example.lifecalc.ui.theme.OnSurface
 import com.example.lifecalc.ui.theme.Primary
 import com.example.lifecalc.ui.theme.PrimaryDim
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun BudgetScreen(
     onBack: () -> Unit,
     viewModel: BudgetViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-
+    val billingManager: BillingManager = koinInject()
+    val activity = LocalContext.current as Activity
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -163,8 +170,17 @@ fun BudgetScreen(
         )
     }
 
-    // Paywall Dialog
     if (state.showPaywall) {
-        PaywallDialog(onDismiss = { viewModel.dismissPaywall() })
+        PaywallDialog(
+            onDismiss = { viewModel.dismissPaywall() },
+            onMonthly = {
+                billingManager.launchMonthlySubscription(activity)
+                viewModel.dismissPaywall()
+            },
+            onYearly = {
+                billingManager.launchYearlySubscription(activity)
+                viewModel.dismissPaywall()
+            }
+        )
     }
 }

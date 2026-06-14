@@ -1,5 +1,6 @@
 package com.example.lifecalc.presentation.screens.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,12 +10,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -24,7 +27,11 @@ import com.example.lifecalc.ui.theme.Primary
 import com.example.lifecalc.ui.theme.Surface
 
 @Composable
- fun PaywallDialog(onDismiss: () -> Unit) {
+ fun PaywallDialog(
+    onDismiss: () -> Unit,
+    onMonthly: () -> Unit,   // ← neu
+    onYearly: () -> Unit     // ← neu
+) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
             colors = CardDefaults.cardColors(containerColor = Surface),
@@ -43,21 +50,44 @@ import com.example.lifecalc.ui.theme.Surface
                     color = Primary
                 )
                 Text(
-                    "Mit Premium kannst du unbegrenzte Ausgaben eintragen und dein Budget vollständig im Blick behalten.",
+                    "Unbegrenzte Historie, Budget-Einträge, Export und mehr.",
                     fontSize = 14.sp,
                     color = OnSurface,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
+                    textAlign = TextAlign.Center
                 )
+
+                // Jahres-Abo — prominent
                 Button(
-                    onClick = onDismiss,
+                    onClick = onYearly,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Primary,
                         contentColor = Background
                     )
                 ) {
-                    Text("Ab 2,99 €/Monat — Jetzt testen")
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "24,99 €/Jahr",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            "2 Monate gratis gegenüber Monatsabo",
+                            fontSize = 11.sp
+                        )
+                    }
                 }
+
+                // Monats-Abo — sekundär
+                OutlinedButton(
+                    onClick = onMonthly,
+                    modifier = Modifier.fillMaxWidth(),
+                    border = BorderStroke(1.dp, Primary)
+                ) {
+                    Text("4,99 €/Monat", color = Primary)
+                }
+
                 TextButton(onClick = onDismiss) {
                     Text("Später", color = OnSurface)
                 }

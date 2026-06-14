@@ -3,6 +3,7 @@ package com.example.lifecalc.Viewmodel
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lifecalc.Viewmodel.UiState.HistoryUiState
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.billing.PremiumStatus
 import com.example.lifecalc.data.repository.CalculationRepository
@@ -15,14 +16,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class HistoryUiState(
-    val entries: List<CalculationResult> = emptyList(),
-    val isLoading: Boolean = true,
-    val isPremium: Boolean = false,
-    val showDeleteConfirm: CalculationResult? = null,  // Entry, das gelöscht werden soll
-    val showPaywall: Boolean = false,
-    val exportState: ExportState = ExportState.Idle
-)
+
 
 sealed class ExportState {
     object Idle : ExportState()
@@ -167,7 +161,7 @@ class HistoryViewModel(
     }
 
     fun launchPremiumLifetime(activity: Activity) {
-        billingManager.launchLifetimePurchase(activity)
+        billingManager.launchYearlySubscription(activity)
         dismissPaywall()
     }
 

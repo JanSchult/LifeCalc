@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.LifeCalc" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Haupt-Theme der App -->
+    <style name="Theme.LifeCalc" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.LifeCalc.Splash" parent="Theme.SplashScreen">
+        <!-- Hintergrundfarbe des Splash -->
+        <item name="windowSplashScreenBackground">#0D0D0D</item>
+        <!-- Icon in der Mitte (512x512 PNG in res/drawable) -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <!-- Nach dem Splash direkt zum Haupt-Theme wechseln -->
+        <item name="postSplashScreenTheme">@style/Theme.LifeCalc</item>
+    </style>
+
 </resources>

@@ -16,18 +16,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-sealed class PremiumStatus {
-    object Loading : PremiumStatus()
-    object Free : PremiumStatus()
-    data class Trial(val daysLeft: Int) : PremiumStatus()
-    object Premium : PremiumStatus()
-}
+
 
 class BillingManager(context: Context) : PurchasesUpdatedListener {
 
     companion object {
-        const val SKU_PREMIUM_MONTHLY = "zeitwert_premium_monthly"   // 2,99 €/Monat
-        const val SKU_PREMIUM_LIFETIME = "zeitwert_premium_lifetime" // 19,99 € einmalig
+        const val SKU_PREMIUM_MONTHLY = "lifecost_premium_monthly"   // 4,99 €/Monat
+        const val SKU_PREMIUM_YEARLY = "lifecost_premium_yearly"   // 49,99 €/Jahr
     }
 
     private val _premiumStatus = MutableStateFlow<PremiumStatus>(PremiumStatus.Loading)
@@ -37,110 +32,128 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
         .setListener(this)
         .enablePendingPurchases(
             PendingPurchasesParams.newBuilder()
-            .enableOneTimeProducts()
-            .build())
+                .enableOneTimeProducts()
+                .build()
+        )
         .build()
+
+    // ── Verbindung ────────────────────────────────────────────────────────
 
     fun connect() {
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(result: BillingResult) {
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     queryPurchases()
+                } else {
+                    // Billing nicht verfügbar (z.B. kein Play Store)
+                    _premiumStatus.value = PremiumStatus.Free
                 }
             }
+
             override fun onBillingServiceDisconnected() {
-                // Retry-Logik hier
+                // Einfacher Retry — bei echter App mit Backoff
+                connect()
             }
         })
     }
 
+    fun disconnect() = billingClient.endConnection()
+
+    // ── Bestehende Käufe prüfen ───────────────────────────────────────────
+
     private fun queryPurchases() {
-        val params = QueryPurchasesParams.newBuilder()
-            .setProductType(BillingClient.ProductType.SUBS)
-            .build()
-
-        billingClient.queryPurchasesAsync(params) { _, purchases ->
-            val hasActiveSub = purchases.any {
-                it.purchaseState == Purchase.PurchaseState.PURCHASED &&
-                        it.products.contains(SKU_PREMIUM_MONTHLY)
-            }
-
-            if (hasActiveSub) {
-                _premiumStatus.value = PremiumStatus.Premium
-                return@queryPurchasesAsync
-            }
-
-            // Einmalig-Kauf prüfen
-            val inappParams = QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.INAPP)
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.SUBS)
                 .build()
-            billingClient.queryPurchasesAsync(inappParams) { _, inapps ->
-                val hasLifetime = inapps.any {
-                    it.purchaseState == Purchase.PurchaseState.PURCHASED &&
-                            it.products.contains(SKU_PREMIUM_LIFETIME)
-                }
-                _premiumStatus.value = if (hasLifetime) PremiumStatus.Premium
-                else PremiumStatus.Free
+        ) { _, purchases ->
+            val hasPremium = purchases.any {
+                it.purchaseState == Purchase.PurchaseState.PURCHASED &&
+                        (it.products.contains(SKU_PREMIUM_MONTHLY) ||
+                                it.products.contains(SKU_PREMIUM_YEARLY))
             }
+            _premiumStatus.value = if (hasPremium) PremiumStatus.Premium
+            else PremiumStatus.Free
         }
     }
+
+
+    // ── Kaufdialog öffnen ─────────────────────────────────────────────────
 
     fun launchMonthlySubscription(activity: Activity) =
         launchBillingFlow(activity, SKU_PREMIUM_MONTHLY, BillingClient.ProductType.SUBS)
 
-    fun launchLifetimePurchase(activity: Activity) =
-        launchBillingFlow(activity, SKU_PREMIUM_LIFETIME, BillingClient.ProductType.INAPP)
+    fun launchYearlySubscription(activity: Activity) =
+        launchBillingFlow(activity, SKU_PREMIUM_YEARLY, BillingClient.ProductType.INAPP)
 
     private fun launchBillingFlow(activity: Activity, productId: String, type: String) {
+        if (!billingClient.isReady) {
+            connect() // Reconnect falls Verbindung weg
+            return
+        }
+
         val productList = listOf(
             QueryProductDetailsParams.Product.newBuilder()
                 .setProductId(productId)
                 .setProductType(type)
                 .build()
         )
-        val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(productList)
-            .build()
 
-        billingClient.queryProductDetailsAsync(params) { _, productDetailsList ->
+        billingClient.queryProductDetailsAsync(
+            QueryProductDetailsParams.newBuilder()
+                .setProductList(productList)
+                .build()
+        ) { billingResult, productDetailsList ->
+
+            if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) return@queryProductDetailsAsync
             val productDetails = productDetailsList.firstOrNull() ?: return@queryProductDetailsAsync
 
-            val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken
+            val offerToken = productDetails.subscriptionOfferDetails
+                ?.firstOrNull()?.offerToken
 
-            val productDetailsParamsList = buildList {
-                val builder = BillingFlowParams.ProductDetailsParams.newBuilder()
-                    .setProductDetails(productDetails)
-                if (offerToken != null) builder.setOfferToken(offerToken)
-                add(builder.build())
-            }
-
-            val flowParams = BillingFlowParams.newBuilder()
-                .setProductDetailsParamsList(productDetailsParamsList)
+            val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                .setProductDetails(productDetails)
+                .apply { if (offerToken != null) setOfferToken(offerToken) }
                 .build()
 
-            billingClient.launchBillingFlow(activity, flowParams)
+            val flowParams = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(listOf(productDetailsParams))
+                .build()
+
+            activity.runOnUiThread {
+                billingClient.launchBillingFlow(activity, flowParams)
+            }
         }
     }
 
+    // ── Kauf bestätigen ───────────────────────────────────────────────────
+
     override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
-        if (result.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            purchases.forEach { purchase ->
-                if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                    acknowledgePurchase(purchase)
-                    _premiumStatus.value = PremiumStatus.Premium
+        when (result.responseCode) {
+            BillingClient.BillingResponseCode.OK -> {
+                purchases?.forEach { purchase ->
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        acknowledgePurchase(purchase)
+                        _premiumStatus.value = PremiumStatus.Premium
+                    }
                 }
+            }
+            BillingClient.BillingResponseCode.USER_CANCELED -> {
+                // Nutzer hat abgebrochen — kein Fehler, nichts tun
+            }
+            else -> {
+                // Echter Fehler — Status nicht ändern
             }
         }
     }
 
     private fun acknowledgePurchase(purchase: Purchase) {
         if (!purchase.isAcknowledged) {
-            val params = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
-            billingClient.acknowledgePurchase(params) { }
+            billingClient.acknowledgePurchase(
+                AcknowledgePurchaseParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
+            ) { /* Acknowledge-Callback — bei Fehler retry nötig */ }
         }
     }
-
-    fun disconnect() = billingClient.endConnection()
 }

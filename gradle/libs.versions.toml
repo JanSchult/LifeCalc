@@ -13,6 +13,8 @@ koinBom = "4.1.0-Beta4"
 roomRuntime = "2.8.3"
 kspVersion = "2.0.21-1.0.27"
 crashlytics       = "3.0.2"
+splashscreen = "1.0.1"
+
 
 # Neu hinzugefügt
 datastorePreferences = "1.1.7"
@@ -73,6 +75,9 @@ koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+
 
 [plugins]
 android-application  = { id = "com.android.application",            version.ref = "agp" }

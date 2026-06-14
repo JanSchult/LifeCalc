@@ -1,3 +1,107 @@
 <resources>
     <string name="app_name">LifeCalc</string>
+
+    <!-- ── Onboarding ────────────────────────────────────── -->
+    <string name="onboarding_emoji">⏳</string>
+    <string name="onboarding_brand">ZEITWERT</string>
+    <string name="onboarding_headline">Deine Zeit\nhat einen Preis.</string>
+    <string name="onboarding_subtitle">Bevor du einen Kauf machst — sieh was er\nwirklich kostet. In Stunden deines Lebens.</string>
+    <string name="onboarding_section_income">WIE VIEL VERDIENST DU?</string>
+    <string name="onboarding_privacy_hint">Nur du siehst diese Daten — sie bleiben auf deinem Gerät.</string>
+    <string name="onboarding_income_monthly">Bruttogehalt (€)</string>
+    <string name="onboarding_income_hourly">Stundenlohn (€)</string>
+    <string name="onboarding_toggle_monthly">Monat</string>
+    <string name="onboarding_toggle_hourly">Stunde</string>
+    <string name="onboarding_hours_per_week">Stunden/Woche</string>
+    <string name="onboarding_deductions">Abzüge (%)</string>
+    <string name="onboarding_cta">LOSLEGEN</string>
+    <string name="onboarding_change_hint">Du kannst alle Angaben jederzeit ändern.</string>
+
+    <!-- ── Input Screen ──────────────────────────────────── -->
+    <string name="input_brand">ZEITWERT</string>
+    <string name="input_headline">Was kostet\ndein Leben?</string>
+    <string name="input_section_income">DEIN EINKOMMEN</string>
+    <string name="input_section_target">WOFÜR ARBEITEST DU?</string>
+    <string name="input_label_name">Bezeichnung (z.B. iPhone, Urlaub…)</string>
+    <string name="input_label_amount">Betrag in €</string>
+    <string name="input_cta">JETZT BERECHNEN</string>
+    <string name="input_nav_history">Frühere Berechnungen</string>
+    <string name="input_nav_budget">💰  Budget-Übersicht</string>
+
+    <!-- ── Validation Errors ─────────────────────────────── -->
+    <string name="error_income_empty">Bitte Einkommen eingeben</string>
+    <string name="error_income_invalid">Nur Zahlen erlaubt</string>
+    <string name="error_income_zero">Einkommen muss größer als 0 sein</string>
+    <string name="error_hours_empty">Bitte Stunden eingeben</string>
+    <string name="error_hours_invalid">Nur Zahlen erlaubt</string>
+    <string name="error_hours_zero">Stunden müssen größer als 0 sein</string>
+    <string name="error_hours_max">Maximal 168 Stunden/Woche möglich</string>
+    <string name="error_tax_invalid">Nur Zahlen erlaubt</string>
+    <string name="error_tax_negative">Abzüge können nicht negativ sein</string>
+    <string name="error_tax_max">Abzüge müssen unter 100% liegen</string>
+    <string name="error_amount_empty">Bitte Betrag eingeben</string>
+    <string name="error_amount_invalid">Nur Zahlen erlaubt</string>
+    <string name="error_amount_negative">Betrag kann nicht negativ sein</string>
+    <string name="error_amount_zero">Betrag muss größer als 0 sein</string>
+    <string name="error_calculation_failed">Berechnung fehlgeschlagen.</string>
+
+    <!-- ── Result Screen ─────────────────────────────────── -->
+    <string name="result_costs_you">kostet dich</string>
+    <string name="result_of_your_life">deines Lebens</string>
+    <string name="result_days">Tage</string>
+    <string name="result_weeks">Wochen</string>
+    <string name="result_months">Monate</string>
+    <string name="result_save">In Historie speichern</string>
+    <string name="result_saved">✓ Gespeichert</string>
+    <string name="result_new_calculation">Neue Berechnung</string>
+    <string name="result_yearly_share">Anteil deiner Jahresarbeitszeit</string>
+
+    <!-- ── History Screen ────────────────────────────────── -->
+    <string name="history_title">HISTORIE</string>
+    <string name="history_empty">Noch keine Berechnungen</string>
+    <string name="history_locked">Unbegrenzte Historie mit Premium</string>
+    <string name="history_working_time">Arbeitszeit</string>
+    <string name="history_premium_title">Premium freischalten</string>
+    <string name="history_premium_subtitle">Ab 4,99 €/Monat — 7 Tage kostenlos testen</string>
+
+    <!-- ── Budget Screen ─────────────────────────────────── -->
+    <string name="budget_title">BUDGET</string>
+    <string name="budget_headline">Was bleibt\nvon deinem Leben?</string>
+    <string name="budget_section_expenses">MONATLICHE AUSGABEN</string>
+    <string name="budget_entries">%d Einträge</string>
+    <string name="budget_empty">Noch keine Ausgaben eingetragen</string>
+    <string name="budget_add">Ausgabe hinzufügen</string>
+    <string name="budget_net_income">Nettoeinkommen</string>
+    <string name="budget_expenses">Ausgaben</string>
+    <string name="budget_remaining">Frei verfügbar</string>
+    <string name="budget_equals">entspricht</string>
+    <string name="budget_lifetime">Lebenszeit</string>
+    <string name="budget_consumed">Verbraucht</string>
+    <string name="budget_dialog_add">Ausgabe hinzufügen</string>
+    <string name="budget_dialog_edit">Ausgabe bearbeiten</string>
+    <string name="budget_dialog_name">Bezeichnung</string>
+    <string name="budget_dialog_amount">Betrag (€/Monat)</string>
+    <string name="budget_dialog_category">Kategorie</string>
+    <string name="budget_dialog_cancel">Abbrechen</string>
+    <string name="budget_dialog_save">Speichern</string>
+    <string name="budget_dialog_add_confirm">Hinzufügen</string>
+
+    <!-- ── Expense Categories ─────────────────────────────── -->
+    <string name="category_wohnen">Wohnen</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_lebensmittel">Lebensmittel</string>
+    <string name="category_unterhaltung">Unterhaltung</string>
+    <string name="category_gesundheit">Gesundheit</string>
+    <string name="category_versicherung">Versicherung</string>
+    <string name="category_abonnements">Abos</string>
+    <string name="category_sonstiges">Sonstiges</string>
+
+    <!-- ── Paywall ────────────────────────────────────────── -->
+    <string name="paywall_emoji">⭐</string>
+    <string name="paywall_title">Premium freischalten</string>
+    <string name="paywall_description">Unbegrenzte Historie, Budget-Einträge, Export und mehr.</string>
+    <string name="paywall_yearly">24,99 €/Jahr</string>
+    <string name="paywall_yearly_hint">2 Monate gratis gegenüber Monatsabo</string>
+    <string name="paywall_monthly">4,99 €/Monat</string>
+    <string name="paywall_later">Später</string>
 </resources>
