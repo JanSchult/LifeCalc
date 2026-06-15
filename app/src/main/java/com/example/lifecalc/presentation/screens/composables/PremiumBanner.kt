@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.ui.theme.OnSurface
 import com.example.lifecalc.ui.theme.Primary
 
@@ -38,8 +40,8 @@ fun PremiumBanner(onUpgrade: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text("Premium freischalten", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Primary)
-                Text("Ab 2,99 €/Monat — 7 Tage kostenlos testen", fontSize = 12.sp, color = OnSurface)
+                Text( stringResource(R.string.paywall_title), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Primary)
+                Text( stringResource(R.string.history_premium_subtitle), fontSize = 12.sp, color = OnSurface)
             }
             Text("→", fontSize = 20.sp, color = Primary)
         }

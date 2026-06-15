@@ -26,10 +26,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.Viewmodel.ResultViewModel
 import com.example.lifecalc.Viewmodel.SharedViewModel
 import com.example.lifecalc.presentation.screens.composables.LifetimeBar
@@ -64,7 +66,11 @@ fun ResultScreen(
         ) {
             // Back-Button
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück", tint = OnSurface)
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                    tint = OnSurface
+                )
             }
 
             // Hauptaussage
@@ -85,7 +91,7 @@ fun ResultScreen(
                     color = Primary
                 )
                 Text(
-                    text = "kostet dich",
+                    text = stringResource(R.string.result_costs_you),
                     fontSize = 14.sp,
                     color = OnSurface
                 )
@@ -96,7 +102,7 @@ fun ResultScreen(
                     color = OnBackground
                 )
                 Text(
-                    text = "deines Lebens",
+                    text = stringResource(R.string.result_of_your_life),
                     fontSize = 14.sp,
                     color = OnSurface
                 )
@@ -110,9 +116,9 @@ fun ResultScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                MetricCard("Tage",    r.formattedDays,   Modifier.weight(1f))
-                MetricCard("Wochen",  r.formattedWeeks,  Modifier.weight(1f))
-                MetricCard("Monate",  r.formattedMonths, Modifier.weight(1f))
+                MetricCard(stringResource(R.string.result_days),   r.formattedDays,   Modifier.weight(1f))
+                MetricCard(stringResource(R.string.result_weeks),  r.formattedWeeks,  Modifier.weight(1f))
+                MetricCard(stringResource(R.string.result_months), r.formattedMonths, Modifier.weight(1f))
             }
 
             // Emotionale Botschaft
@@ -140,7 +146,10 @@ fun ResultScreen(
                 border = BorderStroke(1.dp, if (isSaved) PrimaryDim else Primary)
             ) {
                 Text(
-                    text = if (isSaved) "✓ Gespeichert" else "In Historie speichern",
+                    text = if (isSaved)
+                        stringResource(R.string.result_saved)
+                    else
+                        stringResource(R.string.result_save),
                     color = if (isSaved) PrimaryDim else Primary
                 )
             }
@@ -154,7 +163,7 @@ fun ResultScreen(
                     contentColor = OnBackground
                 )
             ) {
-                Text("Neue Berechnung")
+                Text(stringResource(R.string.result_new_calculation))
             }
         }
     }

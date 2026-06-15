@@ -1,9 +1,14 @@
 package com.example.lifecalc.Viewmodel
 
+import android.annotation.SuppressLint
+import android.content.Context
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lifecalc.R
 import com.example.lifecalc.Viewmodel.UiState.InputUiState
 import com.example.lifecalc.billing.BillingManager
+import com.example.lifecalc.billing.PremiumStatus
 import com.example.lifecalc.data.preference.UserPreferences
 import com.example.lifecalc.domain.model.CalculationResult
 import com.example.lifecalc.domain.model.UserProfile
@@ -16,10 +21,11 @@ import kotlinx.coroutines.launch
 
 
 
-class InputViewModel(
+class InputViewModel @SuppressLint("StaticFieldLeak") constructor(
     private val calculateUseCase: CalculateLifetimeUseCase,
-    billingManager: BillingManager,
-    private val userPreferences: UserPreferences   // ← neu
+    private val billingManager: BillingManager,
+    private val userPreferences: UserPreferences,
+    private val context: Context
 
 ) : ViewModel() {
 
@@ -83,12 +89,21 @@ class InputViewModel(
     }
 
     fun calculate(sharedViewModel: SharedViewModel) {
-        // Erst validieren — wenn Fehler da sind, nicht weiterrechnen
         if (!validate()) return
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
+                // Premium-Check
+                val isPremium = premiumStatus.value is PremiumStatus.Premium
+                if (!isPremium) {
+                    val count = userPreferences.getCalculationCount()
+                    if (count >= FREE_CALCULATION_LIMIT) {
+                        _uiState.update { it.copy(isLoading = false, showPaywall = true) }
+                        return@launch
+                    }
+                }
+
                 val income = _uiState.value.incomeInput.toDouble()
                 val hours  = _uiState.value.hoursPerWeek.toDouble()
                 val tax    = _uiState.value.taxPercent.toDoubleOrNull() ?: 0.0
@@ -105,13 +120,33 @@ class InputViewModel(
 
                 val result = calculateUseCase(profile, target, _uiState.value.targetLabel)
                 sharedViewModel.setResult(result)
+
+                // Zähler erhöhen
+                if (!isPremium) {
+                    userPreferences.incrementCalculationCount()
+                }
+
                 _uiState.update { it.copy(isLoading = false, navigateToResult = true) }
 
             } catch (e: Exception) {
-                _uiState.update { it.copy(error = "Berechnung fehlgeschlagen.", isLoading = false) }
+                _uiState.update {
+                    it.copy(
+                        error = context.getString(R.string.error_calculation_failed),
+                        isLoading = false
+                    )
+                }
             }
         }
     }
+
+    fun dismissPaywall() {
+        _uiState.update { it.copy(showPaywall = false) }
+    }
+
+    companion object {
+        const val FREE_CALCULATION_LIMIT = 2
+    }
+
 
     /**
      * Validiert alle Felder und schreibt Fehler direkt in den UiState.
@@ -120,54 +155,50 @@ class InputViewModel(
     private fun validate(): Boolean {
         val state = _uiState.value
 
-        // ── Einkommen ─────────────────────────────────────────
         val incomeError = when {
             state.incomeInput.isBlank() ->
-                "Bitte Einkommen eingeben"
+                context.getString(R.string.error_income_empty)
             state.incomeInput.toDoubleOrNull() == null ->
-                "Nur Zahlen erlaubt"
+                context.getString(R.string.error_income_invalid)
             state.incomeInput.toDouble() <= 0 ->
-                "Einkommen muss größer als 0 sein"
+                context.getString(R.string.error_income_zero)
             else -> null
         }
 
-        // ── Stunden ───────────────────────────────────────────
         val hoursError = when {
             state.hoursPerWeek.isBlank() ->
-                "Bitte Stunden eingeben"
+                context.getString(R.string.error_hours_empty)
             state.hoursPerWeek.toDoubleOrNull() == null ->
-                "Nur Zahlen erlaubt"
+                context.getString(R.string.error_hours_invalid)
             state.hoursPerWeek.toDouble() <= 0 ->
-                "Stunden müssen größer als 0 sein"
+                context.getString(R.string.error_hours_zero)
             state.hoursPerWeek.toDouble() > 168 ->
-                "Maximal 168 Stunden/Woche möglich"
+                context.getString(R.string.error_hours_max)
             else -> null
         }
 
-        // ── Steuer ────────────────────────────────────────────
         val taxError = when {
             state.taxPercent.isNotBlank() &&
                     state.taxPercent.toDoubleOrNull() == null ->
-                "Nur Zahlen erlaubt"
+                context.getString(R.string.error_tax_invalid)
             state.taxPercent.isNotBlank() &&
                     state.taxPercent.toDouble() < 0 ->
-                "Abzüge können nicht negativ sein"
+                context.getString(R.string.error_tax_negative)
             state.taxPercent.isNotBlank() &&
                     state.taxPercent.toDouble() >= 100 ->
-                "Abzüge müssen unter 100% liegen"
+                context.getString(R.string.error_tax_max)
             else -> null
         }
 
-        // ── Zielbetrag ────────────────────────────────────────
         val targetAmountError = when {
             state.targetAmount.isBlank() ->
-                "Bitte Betrag eingeben"
+                context.getString(R.string.error_amount_empty)
             state.targetAmount.toDoubleOrNull() == null ->
-                "Nur Zahlen erlaubt"
+                context.getString(R.string.error_amount_invalid)
             state.targetAmount.toDouble() < 0 ->
-                "Betrag kann nicht negativ sein"
+                context.getString(R.string.error_amount_negative)
             state.targetAmount.toDouble() == 0.0 ->
-                "Betrag muss größer als 0 sein"
+                context.getString(R.string.error_amount_zero)
             else -> null
         }
 

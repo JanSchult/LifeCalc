@@ -55,6 +55,7 @@
     <string name="result_saved">✓ Gespeichert</string>
     <string name="result_new_calculation">Neue Berechnung</string>
     <string name="result_yearly_share">Anteil deiner Jahresarbeitszeit</string>
+    <string name="back">Zurück</string>
 
     <!-- ── History Screen ────────────────────────────────── -->
     <string name="history_title">HISTORIE</string>
@@ -100,8 +101,17 @@
     <string name="paywall_emoji">⭐</string>
     <string name="paywall_title">Premium freischalten</string>
     <string name="paywall_description">Unbegrenzte Historie, Budget-Einträge, Export und mehr.</string>
-    <string name="paywall_yearly">24,99 €/Jahr</string>
+    <string name="paywall_yearly">44,99 €/Jahr</string>
     <string name="paywall_yearly_hint">2 Monate gratis gegenüber Monatsabo</string>
     <string name="paywall_monthly">4,99 €/Monat</string>
     <string name="paywall_later">Später</string>
+    <string name="msg_default_purchase">diesen Kauf</string>
+    <string name="msg_less_than_hour">Weniger als eine Stunde deines Lebens. Schnell verdient.</string>
+    <string name="msg_half_day">Einen halben Arbeitstag — für %s.</string>
+    <string name="msg_full_day">Ein voller Arbeitstag deines Lebens.</string>
+    <string name="msg_days">%d Stunden. Fast drei Tage, an denen du morgens aufgestanden bist.</string>
+    <string name="msg_two_weeks">Zwei Wochen. Zeit, die du nie zurückbekommst.</string>
+    <string name="msg_one_month">Einen ganzen Arbeitsmonat. Hast du diesen Monat gut gelebt?</string>
+    <string name="msg_months">Mehrere Monate deines Lebens. Ist %s das wert?</string>
+    <string name="msg_year">Mehr als ein Jahr Lebenszeit. Das ist keine Zahl mehr — das ist ein Lebensabschnitt.</string>
 </resources>

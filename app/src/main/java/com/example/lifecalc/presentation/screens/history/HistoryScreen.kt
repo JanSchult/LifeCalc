@@ -26,9 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.Viewmodel.HistoryViewModel
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.billing.PremiumStatus
@@ -77,7 +79,7 @@ fun HistoryScreen(
                 )
             }
             Text(
-                "HISTORIE",
+                stringResource(R.string.history_title),
                 fontSize = 11.sp,
                 letterSpacing = 4.sp,
                 color = Primary,
@@ -92,7 +94,7 @@ fun HistoryScreen(
 
         if (history.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Noch keine Berechnungen", color = OnSurface, fontSize = 14.sp)
+                Text(stringResource(R.string.history_empty), color = OnSurface, fontSize = 14.sp)
             }
         } else {
             LazyColumn(

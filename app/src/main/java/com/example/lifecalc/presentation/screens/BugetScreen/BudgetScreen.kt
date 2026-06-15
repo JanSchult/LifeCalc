@@ -25,9 +25,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.Viewmodel.BudgetViewModel
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.presentation.screens.composables.BudgetSummaryCard
@@ -67,7 +69,7 @@ fun BudgetScreen(
             // Header
             item {
                 Text(
-                    text = "BUDGET",
+                    text = stringResource(R.string.budget_title),
                     fontSize = 11.sp,
                     letterSpacing = 4.sp,
                     color = Primary,
@@ -75,7 +77,7 @@ fun BudgetScreen(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "Was bleibt\nvon deinem Leben?",
+                    text = stringResource(R.string.budget_headline),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = OnBackground,
@@ -101,14 +103,14 @@ fun BudgetScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "MONATLICHE AUSGABEN",
+                        text =stringResource(R.string.budget_section_expenses),
                         fontSize = 10.sp,
                         letterSpacing = 3.sp,
                         color = PrimaryDim,
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = "${state.expenses.size} Einträge",
+                        text = "${state.expenses.size} ${stringResource(R.string.budget_entries)}",
                         fontSize = 12.sp,
                         color = OnSurface
                     )
@@ -125,7 +127,7 @@ fun BudgetScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            "Noch keine Ausgaben eingetragen",
+                            stringResource(R.string.budget_empty),
                             color = OnSurface,
                             fontSize = 14.sp
                         )
@@ -151,7 +153,7 @@ fun BudgetScreen(
             containerColor = Primary,
             contentColor = Background
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Ausgabe hinzufügen")
+            Icon(Icons.Default.Add, contentDescription = stringResource(R.string.budget_add))
         }
     }
 

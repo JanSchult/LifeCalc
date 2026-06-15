@@ -15,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.ui.theme.Accent
 import com.example.lifecalc.ui.theme.Danger
 import com.example.lifecalc.ui.theme.OnSurface
@@ -49,12 +51,12 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 SummaryItem(
-                    label = "Nettoeinkommen",
+                    label =  stringResource(R.string.budget_net_income),
                     value = "+ %.2f €".format(netIncome),
                     valueColor = Accent
                 )
                 SummaryItem(
-                    label = "Ausgaben",
+                    label =  stringResource(R.string.budget_expenses),
                     value = "- %.2f €".format(totalExpenses),
                     valueColor = Danger,
                     align = Alignment.End
@@ -70,7 +72,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("Frei verfügbar", fontSize = 12.sp, color = OnSurface)
+                    Text( stringResource(R.string.budget_expenses), fontSize = 12.sp, color = OnSurface)
                     Text(
                         text = "%.2f €".format(remaining),
                         fontSize = 28.sp,
@@ -79,14 +81,14 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                     )
                 }
                 Column(horizontalAlignment = Alignment.End) {
-                    Text("entspricht", fontSize = 11.sp, color = OnSurface)
+                    Text( stringResource(R.string.budget_equals), fontSize = 11.sp, color = OnSurface)
                     Text(
                         text = "%.1f Std.".format(remainingInHours),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Primary
                     )
-                    Text("Lebenszeit", fontSize = 11.sp, color = OnSurface)
+                    Text( stringResource(R.string.budget_lifetime), fontSize = 11.sp, color = OnSurface)
                 }
             }
 
@@ -98,7 +100,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Verbraucht", fontSize = 11.sp, color = OnSurface)
+                        Text( stringResource(R.string.budget_consumed), fontSize = 11.sp, color = OnSurface)
                         Text(
                             "%.0f%%".format(ratio * 100),
                             fontSize = 11.sp,

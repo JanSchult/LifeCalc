@@ -11,13 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lifecalc.domain.model.ExpenseCategory
 import com.example.lifecalc.ui.theme.Background
 import com.example.lifecalc.ui.theme.OnSurface
 import com.example.lifecalc.ui.theme.Primary
-import com.example.lifecalc.ui.theme.Surface
 import com.example.lifecalc.ui.theme.SurfaceAlt
 
 @Composable
@@ -46,7 +46,7 @@ fun CategoryGrid(
                         ) {
                             Text(cat.emoji, fontSize = 18.sp)
                             Text(
-                                cat.label,
+                                stringResource(cat.stringRes),
                                 fontSize = 9.sp,
                                 color = if (isSelected) Background else OnSurface
                             )

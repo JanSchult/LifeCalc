@@ -17,11 +17,13 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.lifecalc.R
 import com.example.lifecalc.domain.model.ExpenseCategory
 import com.example.lifecalc.ui.theme.Background
 import com.example.lifecalc.ui.theme.OnBackground
@@ -52,7 +54,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = if (isEditing) "Ausgabe bearbeiten" else "Ausgabe hinzufügen",
+                    text = if (isEditing)  stringResource(R.string.budget_dialog_edit) else  stringResource(R.string.budget_dialog_add),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = OnBackground
@@ -61,7 +63,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                 OutlinedTextField(
                     value = name,
                     onValueChange = onNameChange,
-                    label = { Text("Bezeichnung") },
+                    label = { Text( stringResource(R.string.budget_dialog_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     colors = dialogTextFieldColors()
@@ -70,7 +72,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                 OutlinedTextField(
                     value = amount,
                     onValueChange = onAmountChange,
-                    label = { Text("Betrag (€/Monat)") },
+                    label = { Text( stringResource(R.string.budget_dialog_amount)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth(),
@@ -78,7 +80,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                 )
 
                 // Kategorie-Auswahl
-                Text("Kategorie", fontSize = 12.sp, color = OnSurface)
+                Text( stringResource(R.string.budget_dialog_category), fontSize = 12.sp, color = OnSurface)
                 CategoryGrid(
                     selected = category,
                     onSelect = onCategoryChange
@@ -93,7 +95,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Abbrechen", color = OnSurface)
+                        Text( stringResource(R.string.budget_dialog_cancel), color = OnSurface)
                     }
                     Button(
                         onClick = onConfirm,
@@ -103,7 +105,7 @@ import com.example.lifecalc.ui.theme.SurfaceAlt
                             contentColor = Background
                         )
                     ) {
-                        Text(if (isEditing) "Speichern" else "Hinzufügen")
+                        Text(if (isEditing)  stringResource(R.string.budget_dialog_save) else  stringResource(R.string.budget_dialog_add_confirm))
                     }
                 }
             }

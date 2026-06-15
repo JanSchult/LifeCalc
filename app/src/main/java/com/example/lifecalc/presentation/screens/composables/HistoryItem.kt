@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.domain.model.CalculationResult
 import com.example.lifecalc.ui.theme.OnBackground
 import com.example.lifecalc.ui.theme.OnSurface
@@ -46,7 +48,7 @@ fun HistoryItem(result: CalculationResult) {
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(result.formattedHours, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Primary)
-                Text("Arbeitszeit", fontSize = 11.sp, color = OnSurface)
+                Text(stringResource(R.string.history_working_time), fontSize = 11.sp, color = OnSurface)
             }
         }
     }

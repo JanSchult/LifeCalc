@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_prefs")
@@ -17,6 +18,8 @@ class UserPreferences(private val context: Context) {
         val KEY_IS_MONTHLY    = booleanPreferencesKey("is_monthly")
         val KEY_HOURS_PER_WEEK = stringPreferencesKey("hours_per_week")
         val KEY_TAX_PERCENT   = stringPreferencesKey("tax_percent")
+        val KEY_CALCULATION_COUNT = intPreferencesKey("calculation_count")
+
     }
     val KEY_ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
 
@@ -53,4 +56,21 @@ class UserPreferences(private val context: Context) {
     suspend fun saveTaxPercent(value: String) {
         context.dataStore.edit { it[KEY_TAX_PERCENT] = value }
     }
+    val calculationCountFlow: Flow<Int> = context.dataStore.data
+        .map { it[KEY_CALCULATION_COUNT] ?: 0 }
+
+    suspend fun getCalculationCount(): Int =
+        context.dataStore.data.first()[KEY_CALCULATION_COUNT] ?: 0
+
+    suspend fun incrementCalculationCount() {
+        context.dataStore.edit { prefs ->
+            val current = prefs[KEY_CALCULATION_COUNT] ?: 0
+            prefs[KEY_CALCULATION_COUNT] = current + 1
+        }
+    }
+
+    suspend fun resetCalculationCount() {
+        context.dataStore.edit { it[KEY_CALCULATION_COUNT] = 0 }
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.example.lifecalc.Viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lifecalc.R
 import com.example.lifecalc.Viewmodel.UiState.OnboardingUiState
 import com.example.lifecalc.data.preference.UserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OnboardingViewModel(
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingUiState())
@@ -55,27 +58,37 @@ class OnboardingViewModel(
         val state = _uiState.value
 
         val incomeError = when {
-            state.incomeInput.isBlank()              -> "Bitte Einkommen eingeben"
-            state.incomeInput.toDoubleOrNull() == null -> "Nur Zahlen erlaubt"
-            state.incomeInput.toDouble() <= 0        -> "Muss größer als 0 sein"
+            state.incomeInput.isBlank() ->
+                context.getString(R.string.error_income_empty)
+            state.incomeInput.toDoubleOrNull() == null ->
+                context.getString(R.string.error_income_invalid)
+            state.incomeInput.toDouble() <= 0 ->
+                context.getString(R.string.error_income_zero)
             else -> null
         }
 
         val hoursError = when {
-            state.hoursPerWeek.isBlank()               -> "Bitte Stunden eingeben"
-            state.hoursPerWeek.toDoubleOrNull() == null -> "Nur Zahlen erlaubt"
-            state.hoursPerWeek.toDouble() <= 0         -> "Muss größer als 0 sein"
-            state.hoursPerWeek.toDouble() > 168        -> "Max. 168 Std./Woche"
+            state.hoursPerWeek.isBlank() ->
+                context.getString(R.string.error_hours_empty)
+            state.hoursPerWeek.toDoubleOrNull() == null ->
+                context.getString(R.string.error_hours_invalid)
+            state.hoursPerWeek.toDouble() <= 0 ->
+                context.getString(R.string.error_hours_zero)
+            state.hoursPerWeek.toDouble() > 168 ->
+                context.getString(R.string.error_hours_max)
             else -> null
         }
 
         val taxError = when {
             state.taxPercent.isNotBlank() &&
-                    state.taxPercent.toDoubleOrNull() == null  -> "Nur Zahlen erlaubt"
+                    state.taxPercent.toDoubleOrNull() == null ->
+                context.getString(R.string.error_tax_invalid)
             state.taxPercent.isNotBlank() &&
-                    state.taxPercent.toDouble() < 0            -> "Kann nicht negativ sein"
+                    state.taxPercent.toDouble() < 0 ->
+                context.getString(R.string.error_tax_negative)
             state.taxPercent.isNotBlank() &&
-                    state.taxPercent.toDouble() >= 100         -> "Muss unter 100% liegen"
+                    state.taxPercent.toDouble() >= 100 ->
+                context.getString(R.string.error_tax_max)
             else -> null
         }
 

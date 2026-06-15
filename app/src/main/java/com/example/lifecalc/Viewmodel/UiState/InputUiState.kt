@@ -9,6 +9,7 @@ data class InputUiState(
     val targetLabel: String = "",
     val isLoading: Boolean = false,
     val navigateToResult: Boolean = false,
+    val showPaywall: Boolean = false,
 
     // Globaler Fehler (Logikfehler die kein Feld betreffen)
     val error: String? = null,

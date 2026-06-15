@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -19,7 +20,7 @@ import com.example.lifecalc.presentation.screens.composables.SectionLabel
 import com.example.lifecalc.presentation.screens.composables.ZeitwertTextField
 import com.example.lifecalc.ui.theme.*
 import org.koin.androidx.compose.koinViewModel
-
+import com.example.lifecalc.R
 @Composable
 fun OnboardingScreen(
     onComplete: () -> Unit,
@@ -47,7 +48,7 @@ fun OnboardingScreen(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = "ZEITWERT",
+                text = stringResource(R.string.onboarding_brand),
                 fontSize = 11.sp,
                 letterSpacing = 4.sp,
                 color = Primary,
@@ -55,7 +56,7 @@ fun OnboardingScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Deine Zeit\nhat einen Preis.",
+                text = stringResource(R.string.onboarding_headline),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = OnBackground,
@@ -64,7 +65,7 @@ fun OnboardingScreen(
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "Bevor du einen Kauf machst — sieh was er\nwirklich kostet. In Stunden deines Lebens.",
+                text = stringResource(R.string.onboarding_subtitle),
                 fontSize = 15.sp,
                 color = OnSurface,
                 lineHeight = 22.sp,
@@ -75,10 +76,10 @@ fun OnboardingScreen(
         HorizontalDivider(color = SurfaceAlt)
 
         // ── Eingabe ───────────────────────────────────────────────────────
-        SectionLabel("WIE VIEL VERDIENST DU?")
+        SectionLabel( stringResource(R.string.onboarding_section_income))
 
         Text(
-            text = "Nur du siehst diese Daten — sie bleiben auf deinem Gerät.",
+            text =  stringResource(R.string.onboarding_privacy_hint),
             fontSize = 12.sp,
             color = PrimaryDim
         )
@@ -91,7 +92,7 @@ fun OnboardingScreen(
             ZeitwertTextField(
                 value = state.incomeInput,
                 onValueChange = viewModel::onIncomeChange,
-                label = if (state.isMonthly) "Bruttogehalt (€)" else "Stundenlohn (€)",
+                label = if (state.isMonthly)  stringResource(R.string.onboarding_income_monthly) else  stringResource(R.string.onboarding_income_hourly),
                 modifier = Modifier.weight(1f),
                 isError = state.incomeError != null,
                 errorMessage = state.incomeError
@@ -101,7 +102,7 @@ fun OnboardingScreen(
                 onClick = viewModel::onToggleIncomeType,
                 label = {
                     Text(
-                        if (state.isMonthly) "Monat" else "Stunde",
+                        if (state.isMonthly)  stringResource(R.string.onboarding_toggle_monthly) else  stringResource(R.string.onboarding_toggle_hourly),
                         fontSize = 12.sp
                     )
                 },
@@ -119,7 +120,7 @@ fun OnboardingScreen(
             ZeitwertTextField(
                 value = state.hoursPerWeek,
                 onValueChange = viewModel::onHoursChange,
-                label = "Stunden/Woche",
+                label =  stringResource(R.string.onboarding_hours_per_week),
                 modifier = Modifier.weight(1f),
                 isError = state.hoursError != null,
                 errorMessage = state.hoursError
@@ -127,7 +128,7 @@ fun OnboardingScreen(
             ZeitwertTextField(
                 value = state.taxPercent,
                 onValueChange = viewModel::onTaxChange,
-                label = "Abzüge (%)",
+                label =  stringResource(R.string.onboarding_deductions),
                 modifier = Modifier.weight(1f),
                 isError = state.taxError != null,
                 errorMessage = state.taxError
@@ -155,7 +156,7 @@ fun OnboardingScreen(
                 )
             } else {
                 Text(
-                    "LOSLEGEN",
+                    stringResource(R.string.onboarding_cta),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 2.sp
@@ -164,7 +165,7 @@ fun OnboardingScreen(
         }
 
         Text(
-            text = "Du kannst alle Angaben jederzeit ändern.",
+            text =  stringResource(R.string.onboarding_change_hint),
             fontSize = 12.sp,
             color = OnSurface,
             modifier = Modifier.align(Alignment.CenterHorizontally)

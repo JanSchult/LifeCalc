@@ -16,11 +16,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.lifecalc.R
 import com.example.lifecalc.ui.theme.Background
 import com.example.lifecalc.ui.theme.OnSurface
 import com.example.lifecalc.ui.theme.Primary
@@ -44,13 +46,13 @@ import com.example.lifecalc.ui.theme.Surface
             ) {
                 Text("⭐", fontSize = 40.sp)
                 Text(
-                    "Premium freischalten",
+                    stringResource(R.string.history_premium_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Primary
                 )
                 Text(
-                    "Unbegrenzte Historie, Budget-Einträge, Export und mehr.",
+                    stringResource(R.string.paywall_description),
                     fontSize = 14.sp,
                     color = OnSurface,
                     lineHeight = 20.sp,
@@ -68,12 +70,12 @@ import com.example.lifecalc.ui.theme.Surface
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            "24,99 €/Jahr",
+                            stringResource(R.string.paywall_yearly),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
                         Text(
-                            "2 Monate gratis gegenüber Monatsabo",
+                            stringResource(R.string.paywall_yearly_hint),
                             fontSize = 11.sp
                         )
                     }
@@ -85,11 +87,11 @@ import com.example.lifecalc.ui.theme.Surface
                     modifier = Modifier.fillMaxWidth(),
                     border = BorderStroke(1.dp, Primary)
                 ) {
-                    Text("4,99 €/Monat", color = Primary)
+                    Text( stringResource(R.string.paywall_monthly), color = Primary)
                 }
 
                 TextButton(onClick = onDismiss) {
-                    Text("Später", color = OnSurface)
+                    Text( stringResource(R.string.paywall_later), color = OnSurface)
                 }
             }
         }

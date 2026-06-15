@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.ui.theme.PrimaryDim
 import com.example.lifecalc.ui.theme.SurfaceAlt
 
@@ -38,7 +40,7 @@ fun LockedHistoryItem() {
         ) {
             Icon(Icons.Default.Lock, contentDescription = null, tint = PrimaryDim, modifier = Modifier.size(16.dp))
             Spacer(Modifier.width(8.dp))
-            Text("Unbegrenzte Historie mit Premium", fontSize = 13.sp, color = PrimaryDim)
+            Text( stringResource(R.string.history_locked), fontSize = 13.sp, color = PrimaryDim)
         }
     }
 }

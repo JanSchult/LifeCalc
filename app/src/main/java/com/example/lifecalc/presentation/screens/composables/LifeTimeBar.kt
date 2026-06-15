@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lifecalc.R
 import com.example.lifecalc.ui.theme.OnSurface
 import com.example.lifecalc.ui.theme.Primary
 import com.example.lifecalc.ui.theme.SurfaceAlt
@@ -37,7 +39,7 @@ fun LifetimeBar(percentage: Float) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Anteil deiner Jahresarbeitszeit", fontSize = 12.sp, color = OnSurface)
+            Text( stringResource(R.string.result_yearly_share), fontSize = 12.sp, color = OnSurface)
             Text("%.1f%%".format(percentage), fontSize = 12.sp, color = Primary, fontWeight = FontWeight.Bold)
         }
 

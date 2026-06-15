@@ -54,8 +54,7 @@ val appModule = module {
     single { BillingManager(androidContext()) }
 
     // Use Cases
-    factory { CalculateLifetimeUseCase() }
-
+    factory { CalculateLifetimeUseCase(androidContext()) }
     // ViewModels
 
     viewModelOf(::OnboardingViewModel)
