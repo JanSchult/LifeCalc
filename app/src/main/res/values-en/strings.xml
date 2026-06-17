@@ -105,4 +105,10 @@
     <string name="msg_one_month">An entire working month. Did you live this month well?</string>
     <string name="msg_months">Several months of your life. Is %s worth it?</string>
     <string name="msg_year">More than a year of your life. This is no longer a number — it\'s a chapter of your life.</string>
+    <string name="export_success">✓ Export saved to Downloads</string>
+    <string name="export_error">Error: %s</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="export_in_progress">Exporting…</string>
+    <string name="csv_history_header">Label,Amount (€),Hours,Days,Weeks,Months,Date</string>
+    <string name="csv_budget_header">Label,Category,Amount (€/month)</string>
 </resources>

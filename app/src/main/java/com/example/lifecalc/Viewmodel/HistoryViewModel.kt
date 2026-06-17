@@ -1,8 +1,13 @@
 package com.example.lifecalc.Viewmodel
 
 import android.app.Activity
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lifecalc.R
+import com.example.lifecalc.Viewmodel.UiState.ExportState
 import com.example.lifecalc.Viewmodel.UiState.HistoryUiState
 import com.example.lifecalc.billing.BillingManager
 import com.example.lifecalc.billing.PremiumStatus
@@ -18,16 +23,12 @@ import kotlinx.coroutines.launch
 
 
 
-sealed class ExportState {
-    object Idle : ExportState()
-    object InProgress : ExportState()
-    data class Success(val filePath: String) : ExportState()
-    data class Error(val message: String) : ExportState()
-}
+
 
 class HistoryViewModel(
     private val repository: CalculationRepository,
-    private val billingManager: BillingManager
+    private val billingManager: BillingManager,
+    private val context: Context
 ) : ViewModel() {
 
     // ── Premium-Status ────────────────────────────────────────────────────
@@ -104,6 +105,7 @@ class HistoryViewModel(
      * Nur für Premium-Nutzer — sonst wird die Paywall gezeigt.
      * Die eigentliche File-Logik liegt im UseCase (hier als Stub für MVP).
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun exportCsv() {
         if (!_uiState.value.isPremium) {
             _uiState.value = _uiState.value.copy(showPaywall = true)
@@ -114,27 +116,57 @@ class HistoryViewModel(
             _uiState.value = _uiState.value.copy(exportState = ExportState.InProgress)
             try {
                 val csv = buildCsvContent(history.value)
-                // In echtem Code: FileRepository.writeCsv(csv) → gibt Pfad zurück
-                // Hier Stub für MVP:
-                val fakePath = "/storage/emulated/0/Downloads/zeitwert_export.csv"
+                val uri = writeCsvToDownloads(csv, "lifecalc_berechnungen.csv")
                 _uiState.value = _uiState.value.copy(
-                    exportState = ExportState.Success(fakePath)
+                    exportState = ExportState.Success(uri.toString())
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    exportState = ExportState.Error(e.localizedMessage ?: "Export fehlgeschlagen")
+                    exportState = ExportState.Error(
+                        e.localizedMessage ?: "Export fehlgeschlagen"
+                    )
                 )
             }
         }
     }
 
     private fun buildCsvContent(entries: List<CalculationResult>): String {
-        val header = "Bezeichnung,Betrag (€),Stunden,Tage,Wochen,Monate,Datum\n"
+        val header =  context.getString(R.string.csv_history_header) + "\n"
         val rows = entries.joinToString("\n") { e ->
-            "\"${e.targetLabel}\",${e.targetAmount},${e.hoursRequired}," +
-                    "${e.daysRequired},${e.weeksRequired},${e.monthsRequired},${e.timestamp}"
+            "\"${e.targetLabel}\"," +
+                    "${e.targetAmount}," +
+                    "${"%.2f".format(e.hoursRequired)}," +
+                    "${"%.2f".format(e.daysRequired)}," +
+                    "${"%.2f".format(e.weeksRequired)}," +
+                    "${"%.2f".format(e.monthsRequired)}," +
+                    "${e.timestamp}"
         }
         return header + rows
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun writeCsvToDownloads(content: String, fileName: String): android.net.Uri {
+        val resolver = context.contentResolver
+        val contentValues = android.content.ContentValues().apply {
+            put(android.provider.MediaStore.Downloads.DISPLAY_NAME, fileName)
+            put(android.provider.MediaStore.Downloads.MIME_TYPE, "text/csv")
+            put(android.provider.MediaStore.Downloads.IS_PENDING, 1)
+        }
+
+        val uri = resolver.insert(
+            android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+            contentValues
+        ) ?: throw Exception("Datei konnte nicht erstellt werden")
+
+        resolver.openOutputStream(uri)?.use { stream ->
+            stream.write(content.toByteArray(Charsets.UTF_8))
+        }
+
+        contentValues.clear()
+        contentValues.put(android.provider.MediaStore.Downloads.IS_PENDING, 0)
+        resolver.update(uri, contentValues, null, null)
+
+        return uri
     }
 
     fun clearExportState() {

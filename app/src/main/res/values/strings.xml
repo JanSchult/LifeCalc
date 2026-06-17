@@ -114,4 +114,14 @@
     <string name="msg_one_month">Einen ganzen Arbeitsmonat. Hast du diesen Monat gut gelebt?</string>
     <string name="msg_months">Mehrere Monate deines Lebens. Ist %s das wert?</string>
     <string name="msg_year">Mehr als ein Jahr Lebenszeit. Das ist keine Zahl mehr — das ist ein Lebensabschnitt.</string>
+    <string name="export_success">✓ Export gespeichert in Downloads</string>
+    <string name="export_error">Fehler: %s</string>
+    <string name="export_csv">CSV exportieren</string>
+    <string name="export_in_progress">Export läuft…</string>
+
+    <!-- CSV Header History -->
+    <string name="csv_history_header">Bezeichnung,Betrag (€),Stunden,Tage,Wochen,Monate,Datum</string>
+
+    <!-- CSV Header Budget -->
+    <string name="csv_budget_header">Bezeichnung,Kategorie,Betrag (€/Monat)</string>
 </resources>

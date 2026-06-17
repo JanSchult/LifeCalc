@@ -1,6 +1,5 @@
 package com.example.lifecalc.Viewmodel.UiState
 
-import com.example.lifecalc.Viewmodel.ExportState
 import com.example.lifecalc.domain.model.CalculationResult
 
 data class HistoryUiState(
