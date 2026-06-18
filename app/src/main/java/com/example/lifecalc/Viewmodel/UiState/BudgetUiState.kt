@@ -12,6 +12,8 @@ data class BudgetUiState(
     val showAddDialog: Boolean = false,
     val editingExpense: Expense? = null,
     val showPaywall: Boolean = false,
+    val exportState: ExportState = ExportState.Idle,    // ← neu
+
     // Add-Dialog Felder
     val dialogName: String = "",
     val dialogAmount: String = "",
