@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -63,6 +64,7 @@ fun InputScreen(
     val state by viewModel.uiState.collectAsState()
     val billingManager: BillingManager = koinInject()
     val activity = LocalContext.current as Activity
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(state.navigateToResult) {
         if (state.navigateToResult) {
@@ -232,6 +234,11 @@ fun InputScreen(
                 color = OnSurface,
                 fontSize = 13.sp
             )
+        }
+        TextButton(onClick = {
+            uriHandler.openUri("https://github.com/JanSchult/LifeCalc/blob/main/datenschutzerklaerung.md")
+        }) {
+            Text("Datenschutzerklärung")
         }
     }
 
