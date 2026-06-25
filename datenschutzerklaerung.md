@@ -1,18 +1,18 @@
 # Datenschutzerklärung für LifeCalc (Zeitwert)
 
-**Stand: [DATUM EINTRAGEN, z.B. 19. Juni 2026]**
+**Stand: [ 19. Juni 2026]**
 
 ## 1. Verantwortlicher
 
 Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
 
 ```
-[VOLLSTÄNDIGER NAME]
-[STRASSE UND HAUSNUMMER]
-[PLZ UND ORT]
-[LAND]
+[Jan Maximilian Schult]
+[Dorfstraße 21e]
+[38531 Rötgesbüttel]
+[Deutschland]
 
-E-Mail: [DEINE KONTAKT-E-MAIL, z.B. support@lifecalc-app.de]
+E-Mail: [j.m.schult24.03@gmail.com]
 ```
 
 ## 2. Überblick
@@ -125,5 +125,3 @@ Die App richtet sich nicht gezielt an Kinder unter 16 Jahren. Es werden keine Da
 Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, etwa bei Hinzufügen neuer Funktionen oder Änderungen rechtlicher Vorgaben. Die jeweils aktuelle Version ist über den in der App hinterlegten Link sowie auf der Play-Store-Seite einsehbar.
 
 ---
-
-*Diese Datenschutzerklärung wurde nach bestem Wissen erstellt, ersetzt jedoch keine rechtliche Beratung. Bei Unsicherheiten empfehlen wir, die Erklärung vor Veröffentlichung von einer auf IT-/Datenschutzrecht spezialisierten Kanzlei prüfen zu lassen.*
